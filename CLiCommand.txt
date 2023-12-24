@@ -76,7 +76,6 @@ docker run --rm -d -p 8080:8080 airflow-basic
 
 Quick Tour of Airflow CLI
 
-
 docker ps
 * Show running docker containers
 

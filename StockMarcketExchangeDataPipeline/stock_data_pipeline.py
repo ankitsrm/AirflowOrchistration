@@ -3,6 +3,10 @@ from airflow.providers.http.sensors.http import HttpSensor
 from airflow.sensors.filesystem import FileSensor
 from datetime import datetime,timedelta
 
+import csv
+import requests
+import json
+
 default_args = {
     "owner":"ankit",
     "email_on_failure":False,
@@ -31,3 +35,13 @@ with DAG("stock_data_pipeline",start_date=datetime(2021,1,1),
         poke_interval=5,
         timeout=20    
         )
+
+
+def getMatchedStockPrice():
+    
+    BASE_URL="https://gist.githubusercontent.com/marclamberti/f45f872dea4dfd3eaa015a4a1af4b39b/raw/"
+    
+    ENDPOINTS={
+        'EUR':''
+        'USD':'api'
+    }

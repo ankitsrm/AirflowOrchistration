@@ -12,6 +12,8 @@ def download_rates():
     with open('D:\\Airflow\\dockerCompose\\mnt\\airflow\\dags\\files\\forex_currencies.csv') as forex_currencies:
         reader = csv.DictReader(forex_currencies, delimiter=';')
         for idx, row in enumerate(reader):
+            print(idx)
+            print(row)
             print("Reader : ", reader)            
             base = row['base']
             print("Base : ", base)

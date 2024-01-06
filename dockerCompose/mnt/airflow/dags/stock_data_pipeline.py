@@ -5,6 +5,9 @@ from datetime import datetime,timedelta
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.apache.hive.operators.hive import HiveOperator
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from airflow.operators.email import EmailOperator
+from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator;
 
 import csv
 import requests
@@ -20,6 +23,9 @@ default_args = {
     "retry_delay":timedelta(minutes=5)
 
 }
+
+def _get_message() -> str :
+    return "Ankit Hi Welcome to airflow pipeline"
 
 def getMatchedStockPrice():
     
@@ -103,4 +109,24 @@ with DAG("stock_data_pipeline",start_date=datetime(2021,1,1),
             STORED AS TEXTFILE
         """
         
+    )
+    spart_submit_Operator= SparkSubmitOperator(
+        task_id="stockProcessing",
+        application="/opt/airflow/dags/scripts/stock_processing.py",
+        conn_id="spark_con",
+        verbose=False
+    )
+    
+    email_notification = EmailOperator(
+        task_id="send_email_notification",
+        to="airflow@yopmail.com",
+        subject="stockData",
+        html_content="<h3>forex_data_pipeline</h3>"
+    )
+    
+    send_slack_notification = SlackWebhookOperator(
+        task_id="send_slack_notification",
+        http_conn_id="slack_conn",
+        message=_get_message(),
+        channel="#monitoring"
     )

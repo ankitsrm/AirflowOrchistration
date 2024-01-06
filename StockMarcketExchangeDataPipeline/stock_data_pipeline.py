@@ -5,7 +5,7 @@ from datetime import datetime,timedelta
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.apache.hive.operators.hive import HiveOperator
-
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 import csv
 import requests
 import json
@@ -104,3 +104,10 @@ with DAG("stock_data_pipeline",start_date=datetime(2021,1,1),
         """
         
     )
+    spart_submit_Operator= SparkSubmitOperator(
+        task_id="stockProcessing",
+        application="/opt/airflow/dags/scripts/stock_processing.py",
+        conn_id="spark_con",
+        verbose=False
+    )
+    
